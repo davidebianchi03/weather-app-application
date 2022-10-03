@@ -14,7 +14,7 @@ export default class TimeSlot extends Component {
                     source={{uri: this.props.image }}
                     style={styles.weather_conditions_icon}
                 />
-                <Text style={styles.temperature}>{this.props.temperature}°C</Text>
+                <Text style={styles.temperature}>{this.props.temperature}°</Text>
             </View>
         );
     }

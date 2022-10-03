@@ -5,61 +5,37 @@ import TimeSlot from './time_slot';
 export default class Today extends Component {
     constructor(props) {
         super(props)
+        this.state = {
+            forecastList: Array(),
+        }
     }
 
     render() {
+        this.state.forecastList = new Array();
+        let length = 24;
+        if(this.props.forecastList.length < 24){
+            length = this.props.forecastList.length;
+        }
+        for (let i = 0; i < length; i++) {
+            this.state.forecastList.push(
+                <TimeSlot
+                    time= {this.props.forecastList[i].time_slot}
+                    image={this.props.forecastList[i].weather_condition_icon_url}
+                    temperature={this.props.forecastList[i].temperature}
+                    key = {this.props.forecastList[i].time_slot}
+                />
+            )
+        }
+
+
         return (
             <View style={styles.container}>
                 <ScrollView
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}
                     style={styles.scroll_view}>
-                   <TimeSlot
-                   time = "19:00"
-                   image = "https://www.3bmeteo.com/images/set_icone/8/40-40/47.png"
-                   temperature = {22}
-                   />
-                   <TimeSlot
-                   time = "19:00"
-                   image = "https://www.3bmeteo.com/images/set_icone/8/40-40/47.png"
-                   temperature = {22}
-                   />
-                   <TimeSlot
-                   time = "19:00"
-                   image = "https://www.3bmeteo.com/images/set_icone/8/40-40/47.png"
-                   temperature = {22}
-                   />
-                   <TimeSlot
-                   time = "19:00"
-                   image = "https://www.3bmeteo.com/images/set_icone/8/40-40/47.png"
-                   temperature = {22}
-                   />
-                   <TimeSlot
-                   time = "19:00"
-                   image = "https://www.3bmeteo.com/images/set_icone/8/40-40/47.png"
-                   temperature = {22}
-                   />
-                   <TimeSlot
-                   time = "19:00"
-                   image = "https://www.3bmeteo.com/images/set_icone/8/40-40/47.png"
-                   temperature = {22}
-                   />
-                   <TimeSlot
-                   time = "19:00"
-                   image = "https://www.3bmeteo.com/images/set_icone/8/40-40/47.png"
-                   temperature = {22}
-                   />
-                   <TimeSlot
-                   time = "19:00"
-                   image = "https://www.3bmeteo.com/images/set_icone/8/40-40/47.png"
-                   temperature = {22}
-                   />
-                   <TimeSlot
-                   time = "19:00"
-                   image = "https://www.3bmeteo.com/images/set_icone/8/40-40/47.png"
-                   temperature = {22}
-                   />
-                  
+                    {this.state.forecastList}
+
                 </ScrollView>
             </View>
         );

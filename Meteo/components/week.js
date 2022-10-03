@@ -4,19 +4,32 @@ import WeekDay from './week_day';
 
 export default class Week extends Component {
     constructor(props) {
-        super(props)
+        super(props);
+        this.state = {
+            forecastList: Array(),
+        }
     }
 
     render() {
+        this.state.forecastList = new Array()
+        let length = 7;
+        if(this.props.forecastList < 7)
+            length = this.props.forecastList;
+        for (let i = 0; i < length; i++) {
+            this.state.forecastList.push(
+                <WeekDay
+                    day={this.props.forecastList[i].day}
+                    icon={this.props.forecastList[i].icon}
+                    min_temp={this.props.forecastList[i].min_temperature}
+                    max_temp={this.props.forecastList[i].max_temperature}
+                    key={this.props.forecastList[i].day}
+                />
+            )
+        }
+
         return (
             <View style={styles.container}>
-                <WeekDay />
-                <WeekDay />
-                <WeekDay />
-                <WeekDay />
-                <WeekDay />
-                <WeekDay />
-                <WeekDay />
+                {this.state.forecastList}
             </View>
         );
     }

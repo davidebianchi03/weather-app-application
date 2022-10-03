@@ -5,6 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import WeatherNow from './components/weather_now'
 import Today from './components/today';
 import Week from './components/week';
+import Table from './components/table/table';
 
 export default function App() {
 
@@ -13,7 +14,10 @@ export default function App() {
 
   const [temperature, setTemperature] = useState(0);
   const [conditions, setConditions] = useState('');
-  const [placeName, setPlaceName] = useState('')
+  const [placeName, setPlaceName] = useState('');
+  const [updateTime, setUpdateTime] = useState('');
+  const [forecastToday, setForecastToday] = useState('');
+  const [weekForecast, setWeekForecast] = useState('');
 
   useEffect(() => {
     // get list forecast for today
@@ -21,9 +25,35 @@ export default function App() {
       .then(response => response.json())
       .then(data => {
         let forecast = data.weather_forecast;
+        // weather now component informations
         setTemperature(forecast[0].temperature);
         setConditions(forecast[0].weather_condition_description);
         setPlaceName("lambrugo");//-->to change
+        let date = new Date();
+        setUpdateTime(date.getHours() + ":" + date.getMinutes());
+
+        //forecast list for today
+        if (forecast.length < 24) {
+          fetch(api_base_url + "/dayforecast?canonical=" + place_canonical + "&index=" + 1)
+            .then(response => response.json())
+            .then(data => {
+              let moreForecastArray = new Array();
+              for (let i = 0; i < 24 - forecast.length; i++) {
+                moreForecastArray.push(data.weather_forecast[i]);
+              }
+              setForecastToday(forecast.concat(moreForecastArray));
+            });
+        }
+        else {
+          setForecastToday(forecast);
+        }
+      });
+
+      // update week
+      fetch(api_base_url + "/weekforecast?canonical=" + place_canonical)
+      .then(response => response.json())
+      .then(data => {
+        setWeekForecast(data.forecast);
       });
 
   }, []);
@@ -37,15 +67,23 @@ export default function App() {
       >
         <ScrollView>
           <WeatherNow
-            place_name="Lambrugo"
-            time="12:45"
+            place_name={placeName}
+            time={updateTime}
             temperature={temperature}
             conditions={conditions}
           />
-          <Today />
-          <Week />
+          <Today
+            forecastList={forecastToday}
+          />
+          <Week 
+            forecastList = {weekForecast}
+          />
           <StatusBar style="auto" />
+
+          <Table/>
+          <Text></Text>
         </ScrollView>
+        {/* <View  style = {{height: 50}}></View> */}
       </LinearGradient>
     </View>
   );
