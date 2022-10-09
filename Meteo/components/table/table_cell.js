@@ -7,12 +7,18 @@ export default class TableCell extends Component {
     }
 
     render() {
+        let measure_unit;
+        if(this.props.align_measure_unit_top == true){
+            measure_unit = <Text style={styles.measure_unit_top}>{this.props.measure_unit}</Text>
+        }else{
+            measure_unit =  <Text style={styles.measure_unit_bottom}>{this.props.measure_unit}</Text>
+        }
         return (
             <View style={styles.container}>
                 <Text style={styles.title}>{this.props.title}</Text>
                 <View style={styles.value_container}>
                     <Text style={styles.value}>{this.props.value}</Text>
-                    <Text style={styles.measure_unit}>{this.props.measure_unit}</Text>
+                    {measure_unit}
                 </View>
             </View>
         );
@@ -46,9 +52,15 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginLeft: 15
     },
-    measure_unit: {
+    measure_unit_top: {
         color: 'white',
         fontSize: 16,
         marginTop:15
-    }
+    },
+    measure_unit_bottom:{
+        color: 'white',
+        fontSize: 16,
+        marginTop:24,
+        marginLeft:3
+    },
 });

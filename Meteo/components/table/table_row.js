@@ -10,8 +10,19 @@ export default class TableRow extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <TableCell title = "Feels like" value = "25" measure_unit = "°"/>
-                <TableCell title = "Humidity" value = "50"  measure_unit = "%"/>
+                <TableCell
+                    title={this.props.info[0].title}
+                    value={this.props.info[0].value}
+                    measure_unit={this.props.info[0].measure_unit}
+                    align_measure_unit_top = {this.props.info[0].align_measure_unit_top}
+                />
+
+                <TableCell
+                    title={this.props.info[1].title}
+                    value={this.props.info[1].value}
+                    measure_unit={this.props.info[1].measure_unit}
+                    align_measure_unit_top = {this.props.info[1].align_measure_unit_top}
+                />
             </View>
         );
     }
@@ -21,7 +32,7 @@ const styles = StyleSheet.create({
     container: {
         width: '100%',
         height: 150,
-        marginTop: 5,
+        marginTop: 20,
         display: 'flex',
         flexDirection: 'row',
     },

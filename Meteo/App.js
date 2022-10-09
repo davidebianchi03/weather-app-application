@@ -11,6 +11,7 @@ export default function App() {
 
   var api_base_url = "https://meteoappapi.herokuapp.com";
   var place_canonical = "lambrugo";
+  var place_name = "lambrugo";
 
   const [temperature, setTemperature] = useState(0);
   const [conditions, setConditions] = useState('');
@@ -18,6 +19,12 @@ export default function App() {
   const [updateTime, setUpdateTime] = useState('');
   const [forecastToday, setForecastToday] = useState('');
   const [weekForecast, setWeekForecast] = useState('');
+  const [sunsetSunriseTime, setSunsetSunrisTime] = useState({
+    sunrise: '00:00',
+    sunset: '00:00'
+  });
+
+  const zeroPad = (num, places) => String(num).padStart(places, '0')
 
   useEffect(() => {
     // get list forecast for today
@@ -49,11 +56,24 @@ export default function App() {
         }
       });
 
-      // update week
-      fetch(api_base_url + "/weekforecast?canonical=" + place_canonical)
+    // update week
+    fetch(api_base_url + "/weekforecast?canonical=" + place_canonical)
       .then(response => response.json())
       .then(data => {
         setWeekForecast(data.forecast);
+      });
+
+    // get informations about place
+    fetch(api_base_url + "/searchplace?place=" + place_canonical)
+      .then(response => response.json())
+      .then(data => { 
+        let sunrise_time = new Date(data.result[0].sunrise);
+        let sunset_time = new Date(data.result[0].sunset);
+
+        setSunsetSunrisTime({
+          sunrise: zeroPad(sunrise_time.getHours(), 2) + ":" + zeroPad(sunrise_time.getMinutes(), 2),
+          sunset: zeroPad(sunset_time.getHours(), 2) + ":" + zeroPad(sunset_time.getMinutes(), 2),
+        })
       });
 
   }, []);
@@ -75,12 +95,15 @@ export default function App() {
           <Today
             forecastList={forecastToday}
           />
-          <Week 
-            forecastList = {weekForecast}
+          <Week
+            forecastList={weekForecast}
           />
           <StatusBar style="auto" />
 
-          <Table/>
+          <Table
+            forecast={forecastToday}
+            placeinfo={sunsetSunriseTime}
+          />
           <Text></Text>
         </ScrollView>
         {/* <View  style = {{height: 50}}></View> */}
